@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: updateing repository
+    apt:
+      update_cache: yes
+
+  - name: install python3
+    apt:
+      name: python3-pip
+      state: latest
+
+  - name: install psutil
+    apt:
+      name: python3-psutil
+      state: latest
+
+  - name: install matplotlib
+    pip:
+      name: matplotlib
+      state: latest
+      executable: /usr/bin/python3
