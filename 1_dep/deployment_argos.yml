@@ -18,8 +18,17 @@
       name: python3-psutil
       state: latest
 
-  - name: install matplotlib
-    pip:
-      name: matplotlib
+  - name: install python3-dev
+    apt:
+      name: python3-dev
       state: latest
-      executable: /usr/bin/python3
+
+  - name: install matplotlib
+    apt:
+      name: python3-matplotlib
+      state: latest
+
+  - name: install ttkthemes
+    apt:
+      name: python3-ttkthemes
+      state: latest
