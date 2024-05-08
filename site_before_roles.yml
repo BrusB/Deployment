@@ -1,0 +1,128 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name:  update repo
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+#   when: ansible_distribution in ["Debian", "Ubuntu"]
+#   when: ansible_distribution == "Ubuntu" ansible_distribution_version == "24.>
+
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for zidane
+    tags: always
+    authorized_key:
+      user: zidane
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlhfbkuXDMtpnsxbDjff9YhFHHUKA/VbiR78NXDoOMs ansible"
+
+
+- hosts: workstation
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
+
+
+- hosts: web_server
+  become: true
+  tasks:
+
+  - name: install apache2 and php package
+    tags: apache,apache2,ubuntu
+    apt:
+      name:
+        -  apache2
+        -  libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache2 and php package on CentOS
+    tags: apache,centos,httpd
+    yum:
+      name:
+        -  httpd
+        -  php
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+#Para activar un servicio (apache) automaticamente 
+  - name: start httpd (CentOS)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "CentOS"
+
+#Cambiar email de apache en CentOS
+  - name: change e-mail address for admin
+    tags: apache,centos, httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+#Reiniciar apache si sufre algun cambio en CentOS
+  - name: restart httpd (CentOS)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
+#Copiar archivo html en servers
+  - name: copy default html file for site
+    tags: apache,apache2,ubuntu
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+
+- hosts: database_server
+  become: true
+  tasks:
+
+  - name: install mariadb package
+    tags: db,mariadb,ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: file_server
+  become: true
+  tasks:
+
+  - name: install samba package
+    tags: samba
+    package:
+      name: samba
+      state: latest
+
+

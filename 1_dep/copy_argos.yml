@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: copiar argos
+    copy:
+      src: argos_v4.py
+      dest: /home/brus/argos_v4.py
+      owner: root
+      group: root
+      mode: 0440

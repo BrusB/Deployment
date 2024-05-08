@@ -1,0 +1,4 @@
+- name: add ssh key for zidane
+  authorized_key:
+    user: zidane
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlhfbkuXDMtpnsxbDjff9YhFHHUKA/VbiR78NXDoOMs ansible"

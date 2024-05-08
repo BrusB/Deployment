@@ -1,0 +1,50 @@
+---
+
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+#   when: ansible_distribution in ["Debian", "Ubuntu"]
+#   when: ansible_distribution == "Ubuntu" ansible_distribution_version == "24.>
+
+
+  - name: install updates (CentOS)
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+#Creación de usuario
+  - name: create zidane user
+    tags: always
+    user:
+      name: zidane
+      groups: root
+
+  - name: add ssh key for zidane
+    tags: always
+    authorized_key:
+      user: zidane
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlhfbkuXDMtpnsxbDjff9YhFHHUKA/VbiR78NXDoOMs ansible"
+
+  - name: add sudoers file for zidane
+    copy:
+      src: sudoer_zidane
+      dest: /etc/sudoers.d/zidane
+      owner: root
+      group: root
+      mode: 0440
+
