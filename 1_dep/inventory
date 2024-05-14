@@ -1,5 +1,11 @@
-[mis_hosts]
+[web_servers]
 192.168.0.10
+
+[db_servers]
 192.168.0.20
+
+[file_servers]
 192.168.0.30
+
+[workstation]
 192.168.0.100

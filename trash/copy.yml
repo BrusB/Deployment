@@ -1,0 +1,13 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: copiar script particiones
+      copy:
+        src: particiones.py
+        dest: /home/brus/
+        owner: root
+        group: root
+        mode: 0644

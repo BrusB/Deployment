@@ -8,6 +8,28 @@
     apt:
       update_cache: yes
 
+  - name: copiar argos
+    copy:
+      src: /home/brus/argos_v15.py
+      dest: /home/argos_v15.py
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: agregar usuario argos
+    blockinfile:
+      path: /home/brus/.bashrc
+      block:
+        export USUARIO_ARGOS1="argos"
+        export CONTRASENA_ARGOS1="argos123"
+      state: present
+
+  -  name: Ejecutar source ~/.bashrc
+     shell: source ~/.bashrc
+     args:
+        executable: /bin/bash
+
+
   - name: install python3
     apt:
       name: python3-pip

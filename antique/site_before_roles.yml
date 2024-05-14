@@ -43,7 +43,7 @@
       group: root
 
 
-- hosts: web_server
+- hosts: web_servers
   become: true
   tasks:
 
@@ -103,7 +103,7 @@
       mode: 0644
 
 
-- hosts: database_server
+- hosts: db_servers
   become: true
   tasks:
 
@@ -115,7 +115,7 @@
     when: ansible_distribution == "Ubuntu"
 
 
-- hosts: file_server
+- hosts: file_servers
   become: true
   tasks:
 

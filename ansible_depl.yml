@@ -1,0 +1,51 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install ansible
+    apt:
+      name: ansible
+      state: latest
+
+  - name: copy inventory
+    copy:
+      src: inventory
+      dest: /home/brus/ansible/inventory
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy ansible-configuration
+    copy:
+      src: ansible.cfg
+      dest: /home/brus/ansible/ansible.cfg
+      owner: root
+      group: root
+      mode: 0644
+
+
+  - name: copy data.yml
+    copy:
+      src: data.yml
+      dest: /home/brus/ansible/data.yml
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy bootstrap.yml
+    copy:
+      src: bootstrap.yml
+      dest: /home/brus/ansible/bootstrap.yml
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy sudoers zidane
+    copy:
+      src: files/sudoer_zidane
+      dest: /home/brus/ansible/files/sudoer_zidane
+      owner: root
+      group: root
+      mode: 0644
